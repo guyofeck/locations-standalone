@@ -49,6 +49,34 @@ app.get('/auth', async (req, res) => {
     return res.redirect(`${INSTALLER_URL}/close-window?access_token=${access['access_token']}`)
 });
 
+app.get('/api/locations', async (req, res) => {
+    const instanceId = req.query.instanceId.toString();
+    const refreshToken = await redisClient.get(instanceId);
+
+    const accessResponse = await fetch('https://www.wix.com/oauth/access', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            'grant_type': 'refresh_token',
+            'client_id': APP_ID,
+            'client_secret': CLIENT_SECRET,
+            refresh_token: refreshToken
+        })
+    });
+    const access = await accessResponse.json() as AccessResponse;
+
+    const locationssResponse = await fetch('https://manage.wix.com/_api/locations-web/v1/locations', {
+        headers: {
+            Authorization: access['access_token']
+        }
+    });
+    const locations = await locationssResponse.json();
+
+    return res.json(locations);
+});
+
 
 app.listen(process.env.PORT || 9000);
 
