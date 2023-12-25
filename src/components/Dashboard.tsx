@@ -1,7 +1,20 @@
 import React from 'react';
 import './Dashboard.css';
 import { Location } from '../types';
-
+import {
+    Table,
+    TableActionCell,
+    EmptyState,
+    Image,
+    Page,
+    TextButton,
+    WixDesignSystemProvider,
+    Modal,
+    MessageModalLayout,
+    Button,
+    Text,
+    Input
+} from "@wix/design-system";
 const locations: Location[]  = [
     {
         name: "Tel Aviv",
@@ -20,31 +33,25 @@ const locations: Location[]  = [
 ]
 
 function Dashboard() {
+    const columns = [
+        { title: 'Name', width: '60%', render: (location: Location) => location.name },
+        { title: 'Coords', width: '40%', render: (location: Location) => `${location.coord.latitude.toFixed(2)},${location.coord.longitude.toFixed(2)}` },
+    ]
 
-    return (
-        <div className="locations-container">
-            <div className="locations-header-container">
-                <h1>Our Locations</h1>
-                <button className="update-locatios-button">Update Locations</button>
-            </div>
-            <table className="locations-table">
-                <thead>
-                    <tr>
-                        <th className="locations-table-header">Name</th>
-                        <th className="locations-table-header">Coords</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {locations.map(location => {
-                        return <tr key={location.name}>
-                            <td className="locations-item-name">{location.name}</td>
-                            <td className="locations-item-name">{location.coord.latitude.toFixed(2)},{location.coord.longitude.toFixed(2)}</td>
-                        </tr>
-                    })}
-                </tbody>
-            </table>
-        </div>
+    return  (
+        <Page>
+            <Page.Header
+                title="Our Locations"
+                actionsBar={<Button>Update Locations</Button>}
+            />
+            <Page.Content>
+                <Table data={locations} columns={columns} rowVerticalPadding="medium">
+                    <Table.Content />
+                </Table>
+            </Page.Content>
+        </Page>
     );
+    ;
 }
 
 export default Dashboard;
