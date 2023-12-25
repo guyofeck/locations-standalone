@@ -15,6 +15,19 @@ import {
     Text,
     Input
 } from "@wix/design-system";
+import { dashboard } from '@wix/dashboard';
+import { createClient } from '@wix/sdk';
+
+const client = createClient({
+    host: dashboard.host(),
+    auth: dashboard.auth(),
+    modules: {
+        dashboard,
+    },
+});
+
+const navigateToSettings = () => client.dashboard.navigate('71e35f24-8eb7-41b0-b261-c2259a76372f')
+
 const locations: Location[]  = [
     {
         name: "Tel Aviv",
@@ -42,11 +55,12 @@ function Dashboard() {
         <Page>
             <Page.Header
                 title="Our Locations"
-                actionsBar={<Button>Update Locations</Button>}
+                actionsBar={<Button onClick={navigateToSettings}>Update Locations</Button>}
             />
             <Page.Content>
                 <Table data={locations} columns={columns} rowVerticalPadding="medium">
                     <Table.Content />
+
                 </Table>
             </Page.Content>
         </Page>
